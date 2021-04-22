@@ -8,7 +8,12 @@ type Episode = {
     id: string;
     title: string;
     members: string;
-    published_at: string;
+    thumbnail: string;
+    duration: number;
+    description: string;
+    publishedAt: Date;
+    durationAsString: string;
+    url: string;
 }
 
 type HomeProps = {
