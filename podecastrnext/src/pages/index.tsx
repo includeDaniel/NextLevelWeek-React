@@ -1,8 +1,11 @@
 import { GetStaticProps } from 'next'
+import Image from 'next/image'
 import { api } from '../services/api'
 import { format, parseISO } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 import { convertDurationToTimeString } from '../utils/converDurationToTimeString'
+
+import styles from './home.module.scss'
 
 type Episode = {
     id: string;
@@ -17,14 +20,41 @@ type Episode = {
 }
 
 type HomeProps = {
-  episodes: Episode[];
+  latestEpisodes: Episode[];
+  allEpisodes: Episode[];
 }
 
-export default function Home(props : HomeProps) {
+export default function Home({latestEpisodes, allEpisodes} : HomeProps) {
   return (
-    <div>
-      <h1>Index</h1>
-      <p>{JSON.stringify(props.episodes)}</p>
+    <div className={styles.homepage}>
+        <section className={styles.latestEpisodes}>
+          <h2>últimos Lançamentos</h2>
+
+          <ul>
+            {latestEpisodes .map(episode => {
+              return (
+                <li key={episode.id}>
+                  <Image width={192} height={192} objectFit="cover" src={episode.thumbnail} alt={episode.title}/>
+                
+                <div className={styles.episodeDetails}>
+                  <a href="">{episode.title}</a>
+                  <p>{episode.members}</p>
+                  <span>{episode.publishedAt}</span>
+                  <span>{episode.publishedAt}</span>
+                </div>
+
+                  <button type="button">
+                    <img src="/play-green.svg" alt="Tocar episódio"/>
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+        </section>
+
+        <section className={styles.allEpisodes}>
+
+        </section>
     </div>
   )
 }
@@ -53,9 +83,13 @@ export const getStaticProps : GetStaticProps = async () => {
     };
   })
 
+  const latestEpisodes = episodes.slice(0, 2)
+  const allEpisodes = episodes.slice(2, episodes.lenght)
+
 return {
   props: {
-    episodes, 
+      latestEpisodes,
+      allEpisodes, 
   
     },
     revalidate : 60 * 60 * 8 ,
