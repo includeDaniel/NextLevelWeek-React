@@ -4,10 +4,11 @@ import { convertDurationToTimeString }from '../../utils/converDurationToTimeStri
 import Image from 'next/image'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { api } from '../../services/api';
+import { PlayerContext } from '../../contexts/PlayerContexts'
 
 import styles from './episode.module.scss'
+import { useContext } from "react"
 
 type Episode = {
     id: string;
@@ -41,7 +42,7 @@ export default function Episode({ episode } : EpisodeProps) {
                     height={160} 
                     src={episode.thumbnail} 
                     objectFit="cover" />
-                <button>
+                <button type="button">
                     <img src="/play.svg" alt="Tocar episódio"/>
                 </button>
             </div>

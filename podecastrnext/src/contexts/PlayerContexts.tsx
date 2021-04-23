@@ -1,4 +1,5 @@
 import { createContext, useState,  ReactNode } from 'react'
+import Episode from '../pages/episodes/[slug]'
 
 type Episode = {
     title: string;
@@ -12,8 +13,11 @@ type PlayerContextData = {
     episodeList: Episode[],
     currentEpisodeIndex: number;
     isPlaying: boolean;
+    playList: (list: Episode[], index: number) => void
     play:(episode: Episode) => void
     togglePlay: () => void
+    playNext: () => void
+    playPrevious: () => void
     setPlayingState: (state: boolean) => void
 }
 
@@ -27,20 +31,41 @@ export function PlayerContextProvider( {children } : PlayerContextProviderProps 
 
   const [episodeList, setEpisodeList] = useState([])
   const [currentEpisodeIndex, setCurrentEpisodeIndex] = useState(0)
-  const [isPlaying, setIsPlatying] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(false)
 
   function play(episode) {
     setEpisodeList([episode]);
     setCurrentEpisodeIndex(0);
-    setIsPlatying(true)
+    setIsPlaying(true)
+  }
+
+  function playList(list: Episode[], index: number) {
+      setEpisodeList(list);
+      setCurrentEpisodeIndex(index);
+      setIsPlaying(true)
+
   }
 
   function togglePlay() {
-    setIsPlatying(!isPlaying)
+    setIsPlaying(!isPlaying)
   }
 
   function setPlayingState(state: boolean) {
-    setIsPlatying(state);
+    setIsPlaying(state);
+  }
+
+  function playNext() {
+    const nextEpisodeIndex = currentEpisodeIndex + 1
+    
+    if (nextEpisodeIndex >= episodeList.length) {
+        setCurrentEpisodeIndex(currentEpisodeIndex + 1)
+    }
+  }
+  function playPrevious() {
+      if(currentEpisodeIndex > 0) {
+        setCurrentEpisodeIndex(currentEpisodeIndex - 1)
+      }
+      
   }
 
   return (
@@ -50,7 +75,10 @@ export function PlayerContextProvider( {children } : PlayerContextProviderProps 
         currentEpisodeIndex,
         play, isPlaying,
         togglePlay,
-        setPlayingState
+        setPlayingState,
+        playList,
+        playNext,
+        playPrevious,
         }}>
             {children}
        </PlayerContext.Provider>
