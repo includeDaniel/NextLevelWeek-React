@@ -5,10 +5,8 @@ import Image from 'next/image'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import Link from 'next/link'
 import { api } from '../../services/api';
-import { PlayerContext } from '../../contexts/PlayerContexts'
-
+import { usePlayer } from '../../contexts/PlayerContexts'
 import styles from './episode.module.scss'
-import { useContext } from "react"
 
 type Episode = {
     id: string;
@@ -29,6 +27,8 @@ type EpisodeProps = {
 
 export default function Episode({ episode } : EpisodeProps) {
 
+    const { play } = usePlayer();
+
     return(
         <div className={styles.episode}>
             <div className={styles.thumbnailContainer}> 
@@ -42,7 +42,7 @@ export default function Episode({ episode } : EpisodeProps) {
                     height={160} 
                     src={episode.thumbnail} 
                     objectFit="cover" />
-                <button type="button">
+                <button type="button" onClick={() => play(episode)}>
                     <img src="/play.svg" alt="Tocar episódio"/>
                 </button>
             </div>
